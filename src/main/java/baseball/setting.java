@@ -15,35 +15,37 @@ public class setting {
     
     private static void makeDigit(){
         digit = 1;
-        for(int i = 0; i < answerLength; i++){
+        for(int i = 0; i < answerLength-1; i++){
         digit = digit *10;
         }
     }
 
-    public List<Integer> getUserAnswer() {
+    public static List<Integer> getUserAnswer() {
         userAnswer = Integer.parseInt(Console.readLine());
         validateLength(userAnswer);
         List<Integer> afterProcessAnswer = processAnswer(userAnswer);
         validateNumbers(afterProcessAnswer);
+        validateUnique(afterProcessAnswer);
         return afterProcessAnswer;
     }
-    private List<Integer> processAnswer(int userAnswer){
+    private static List<Integer> processAnswer(int userAnswer){
         List<Integer> processAns = new ArrayList<>();
         digit =1;
         makeDigit();
         for(int i = 0 ; i < answerLength; i++){
             processAns.add(userAnswer/ digit);
+            userAnswer = userAnswer%digit;
             digit = digit/10;
         }
         return processAns;
     }
 
-    private void validateLength(int userAnswer){
-        if(99 < userAnswer && userAnswer < 1000) return;
+    private static void validateLength(int userAnswer){
+        if(111 < userAnswer && userAnswer < 1000) return;
         throw new IllegalArgumentException("잘못된 입력값을 입력하였습니다.");
     }
 
-    private  void validateNumbers(List<Integer> AfterProcessAnswer){
+    private static void validateNumbers(List<Integer> AfterProcessAnswer){
         for(int i = 0; i < answerLength; i++){
             if(AfterProcessAnswer.get(i) == 0){
                 throw new IllegalArgumentException("잘못된 입력값을 입력하였습니다.");
@@ -51,8 +53,43 @@ public class setting {
         }
     }
 
-    private int makeAns() {
-        return camp.nextstep.edu.missionutils.Randoms.pickNumberInRange(startNum,endNum);
+    public static List<Integer> makeAns() {
+        List<Integer> ans = new ArrayList<>();
+        int tmp = 0;
+        tmp = camp.nextstep.edu.missionutils.Randoms.pickNumberInRange(startNum,endNum);
+        ans.add(tmp);
+        int tmp2 = 0;
+        while(true){
+        tmp2 = camp.nextstep.edu.missionutils.Randoms.pickNumberInRange(startNum,endNum);
+            if(tmp != tmp2){
+                ans.add(tmp2);
+                break;
+            }
+        }
+        int tmp3 = 0;
+        one :while (true){
+            tmp3 = camp.nextstep.edu.missionutils.Randoms.pickNumberInRange(startNum,endNum);
+            boolean check = false;
+            for(int i = 0 ; i < 2; i++){
+                if(ans.get(i) != tmp3);
+                else check = true;
+            }
+        if(!check){
+            ans.add(tmp3);
+            break one;
+        }
+        }
+
+        return ans;
+    }
+
+    private static void validateUnique(List<Integer> AfterProcessAnswer){
+        boolean[] check = new boolean[10];
+        for(int i = 0; i< answerLength; i++){
+            if(!check[AfterProcessAnswer.get(i)])
+                check[AfterProcessAnswer.get(i)] = true;
+            else throw new IllegalArgumentException("잘못된 입력값을 입력하였습니다.");
+        }
     }
 
 }
